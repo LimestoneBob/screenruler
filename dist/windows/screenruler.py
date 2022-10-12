@@ -36,8 +36,8 @@ class App(tk.Tk):
         self.dpi = self.winfo_fpixels('1m')
         self.title("Ruler")
         
-        self.iconbitmap(r'E:\screenruler\favicon.ico')
-
+        #self.iconbitmap(r'E:\screenruler\favicon.ico')
+        self.iconbitmap(resource_path('favicon.ico'))
 
         # Define Widgets
         self.frame = tk.Frame(self)
