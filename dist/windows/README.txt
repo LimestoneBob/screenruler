@@ -26,6 +26,7 @@ second: If the default tk icon is going to be changed;
       Add correct path to script for app icon:
         ex.. self = Tk()
              self.iconbitmap(r'E:\screenruler\favicon.ico')
+             ** self.iconbitmap(resource_path('favicon.ico')) To ensure correct packaging of binary the resource_path script must be used.
       Add to pyinstaller
              --add-binary "favicon.ico;."
 
