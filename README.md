@@ -9,7 +9,7 @@ Cross platform screen ruler using tkinter.
 - **Reference Line**: Shows how far along ruler the mouse is at any point in time.
 - **Rotatable**: Allows rotations of 90° so that ruler ticks are can be shown on bottom, left, top, or right side of ruler.
 - **Supported Measurement**: Pixels, Points, Em, Inches, Millimeters, Picas
-- **Transparency**: <sup>new</sup> See images under ruler app  _(Windows .exe file only)_
+- **Transparency**: <sup>new</sup> Gives the ability to see images under ruler app  _(Windows .exe file only)_
 
 
 ## How to run
