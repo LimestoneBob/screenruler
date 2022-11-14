@@ -35,7 +35,7 @@ class window_tosetscale(tk.Toplevel):
         
         self.geometry("290x60")
         self.title('Set scale factor')
-        self.iconbitmap(r'E:\screenrulerWin\favicon.ico')
+        self.iconbitmap(resource_path('favicon.ico'))
 
         # Define Widgets
         self.configure(bg = 'yellow2')
@@ -88,7 +88,7 @@ class App(tk.Tk):
         self.dpi = self.winfo_fpixels('1m')
         self.title("Ruler")
 
-        self.iconbitmap(r'E:\screenrulerWin\favicon.ico')
+        self.iconbitmap(resource_path('favicon.ico'))
 
         # Define Widgets
         self.frame = tk.Frame(self)
