@@ -10,7 +10,7 @@ Cross platform screen ruler using tkinter.
 - **Rotatable**: Allows rotations of 90° so that ruler ticks are can be shown on bottom, left, top, or right side of ruler.
 - **Supported Measurement**: Pixels, Points, Em, Inches, Millimeters, Picas
 - **Transparency**: <sup>new</sup> Gives the ability to see images under ruler app  _(Windows .exe file only)_
-- **Scale factor**: <sup>new</sup> Apply a factor when measuring items that use a scaled ratio.
+- **Scale factor**: <sup>new</sup> Apply a factor when measuring items that use a scaled ratio. _(Windows .exe file only)_
 
 
 ## How to run
