@@ -8,6 +8,7 @@ The windows 10 app was created from the Cross platform screen ruler using auto-p
 - **Rotatable**: Allows rotations of 90° so that ruler ticks are can be shown on bottom, left, top, or right side of ruler.
 - **Supported Measurement**: Pixels, Points, Em, Inches, Millimeters, Picas
 - **new**: Added transparency to app.
+           Added scale calculation.
 
 ## How to run
 

@@ -1,3 +1,7 @@
+import tkinter as tk
+import tkinter.ttk as ttk
+import itertools
+from conversions import CONVERSIONS
 import sys
 import os
 
@@ -8,12 +12,6 @@ def resource_path(relative_path):
 
 resource_path('conversions')
 resource_path('favicon.ico')
-
-from sys import platform
-import tkinter as tk
-import itertools
-from conversions import CONVERSIONS
-
 
 class Popup(tk.Menu):
     def __init__(self, *args, **kwargs):
@@ -29,37 +27,87 @@ class Popup(tk.Menu):
             # self.grab_release()
             pass
 
+class window_tosetscale(tk.Toplevel):
+    # https://www.pythontutorial.net/tkinter/tkinter-toplevel/
+    
+    def __init__(self, parent):
+        super().__init__(parent)
+        
+        self.geometry("290x60")
+        self.title('Set scale factor')
+        self.iconbitmap(r'E:\screenrulerWin\favicon.ico')
+
+        # Define Widgets
+        self.configure(bg = 'yellow2')
+
+        label = tk.Label(self, text="unit multiplier: ", bg='yellow2')
+        label.grid(row=0, column=0, sticky="e", pady=15)       
+
+        self.entry = ttk.Entry(self, width=10)
+        self.entry.grid(row=0, column=1, sticky="w")
+        
+        self.metric = tk.StringVar(self)
+        self.metric.set("ft") # default value
+        m = ttk.OptionMenu(self, self.metric, "ft", "mm")
+        m.grid(row=0, column=2)
+        
+        button = ttk.Button(self, text="Done", command=self.getvalue)
+        button.grid(row=0, column=3, sticky="w")
+        
+    # set window over root window
+    def win_pos(self, xcoord, ycoord):
+        x = xcoord
+        y = ycoord
+        # new window relative to the root window
+        self.geometry("+%d+%d" %(x-80+200,y-60+60))
+
+    def getvalue(self):
+        # pass scale value to parent,App
+        # Validation of user input required. Check for number. 
+        if (self.entry.get().isdigit()):
+            App.scale_value = int(self.entry.get())
+            App.unitMeasure = self.metric.get()
+        try:
+            float(self.entry.get())
+            App.scale_value = float(self.entry.get())
+            App.unitMeasure = self.metric.get()
+        except:
+            pass 
+        #close menu    
+        self.destroy()
+        
 
 class App(tk.Tk):
+    scale_value = 0 # user input; scale multiplier
+    unitMeasure = "ft"
+    unitMulti = 0 # unit scaled to correct measure
+    cntTime = 0 # use to keep time for display of scaled unit
+
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
+        super().__init__()
         self.dpi = self.winfo_fpixels('1m')
         self.title("Ruler")
-        
-        #self.iconbitmap(r'E:\screenruler\favicon.ico')
-        self.iconbitmap(resource_path('favicon.ico'))
+
+        self.iconbitmap(r'E:\screenrulerWin\favicon.ico')
 
         # Define Widgets
         self.frame = tk.Frame(self)
         self.canvas = tk.Canvas(self.frame)
-        self.frame.pack(fill='both', expand=True)
-        self.canvas.pack(fill='both', expand=True)
+        self.frame.pack(side='bottom', fill='both', expand=True)
+        self.canvas.pack(side='bottom', fill='both', expand=True)
         self.canvas['background'] = 'yellow2'
         
         # Define transparency
         # https://stackoverflow.com/questions/19080499/transparent-background-in-a-tkinter-window
-        if platform == "linux" or platform == "linux2":
-            self.wait_visibility(self)
-            self.attributes("-alpha", 0.8)
-        elif platform == "win32":
-            self.attributes("-alpha", 0.8)
-        elif platform == "darwin":
-            self.attributes("-alpha", 0.8)
+        self.attributes("-alpha", 0.8)
 
         # Allow user to move window by dragging it
         self.bind("<ButtonPress-1>", self.start_window_move)
         self.bind("<ButtonRelease-1>", self.stop_window_move)
         self.bind("<B1-Motion>", self.on_window_move)
+
+        # Select unit of measure to convert
+        self.bind("<Double-Button-1>", self.unitConv)
 
         # Define Dimensions
         self._orient = 'horizontal'  # Orientation of ruler
@@ -84,7 +132,8 @@ class App(tk.Tk):
             {"label": "Em", "command": lambda *args: self.__dict__.update({"_measure": "em"})},
             {"label": "Inches", "command": lambda *args: self.__dict__.update({"_measure": "in"})},
             {"label": "Millimeters", "command": lambda *args: self.__dict__.update({"_measure": "mm"})},
-            {"label": "Picas", "command": lambda *args: self.__dict__.update({"_measure": "pi"})}
+            {"label": "Picas", "command": lambda *args: self.__dict__.update({"_measure": "pi"})},
+            {"label": "Scale*x", "command": self.open_scale_window},
         ]
         for cmd in commands:
             self.popup_menu.add_command(**cmd)
@@ -97,6 +146,7 @@ class App(tk.Tk):
         self.update_orientation()
         self.draw_ticks()
         self.draw_reference_line()
+        self.dispMeasure()
         self.after(50, self.step)
 
     def update_dimensions(self):
@@ -132,7 +182,6 @@ class App(tk.Tk):
                     break
                 if i == 0:
                     self.canvas.create_text(self.tick_coords(tick_px, 30)[:2], text=str(tick))
-                    self.canvas.create_line(*self.tick_coords(tick_px, 15))
                 elif i == 1:
                     self.canvas.create_line(*self.tick_coords(tick_px, 15))
                 elif i == 2:
@@ -202,7 +251,36 @@ class App(tk.Tk):
         x = self.winfo_x() + deltax
         y = self.winfo_y() + deltay
         self.geometry("+%s+%s" % (x, y))
+        
+    def open_scale_window(self):
+        # open new window for scale input relative to the root window
+        x = self.winfo_x()
+        y = self.winfo_y()
+        window = window_tosetscale(self)
+        window.win_pos(x, y)
+        window.grab_set()
 
+    def unitConv(self, event):
+        # unit of measure conversion
+        x, y = self.get_mouse_pos()
+        if self._orient == "horizontal":
+            self.unitMulti = self.scale_value*int(x)
+        else:
+            self.unitMulti = self.scale_value*int(y)
 
-app = App()
-app.mainloop()
+    def dispMeasure(self):
+        x, y = self.get_mouse_pos()
+        if self.unitMulti > 0:
+            self.cntTime += 1
+            if self.cntTime < 240:
+                if self._orient == "horizontal":
+                    self.canvas.create_text(x-40, y+5, text="{:.2f} {}".format(self.unitMulti, self.unitMeasure))
+                else:
+                    self.canvas.create_text(x+10, y+25, text="{:.2f} {}".format(self.unitMulti, self.unitMeasure))
+            else:
+                self.unitMulti = 0
+                self.cntTime = 0
+        
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
