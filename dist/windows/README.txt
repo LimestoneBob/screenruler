@@ -18,6 +18,10 @@ Download the screenruler.exe file, then double click file from the parent direct
 - **Left click and drag**: Drags the ruler around the screen
 - **Right click**: Open a menu allowing you to rotate the ruler, or select a new measurement unit.
 
+## Scale calculation
+- **Select scale from the menu and input the scale factor. Place the ruler between item to be measured and 
+    double click the end of length being measured to see calculation. 
+
 
 ## Build instructions
 
