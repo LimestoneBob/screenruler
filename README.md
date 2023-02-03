@@ -20,7 +20,7 @@ Download the repo, then from the parent directory run `python3 -m screenruler.ma
 
 ### Method 2:
 For Windows 10, Download screenruler.exe from Releases and then double click file. The App will run and no installation needed. The first time
-the app is run Windows will show "unknown publisher" warning as the app doesn't have a code signing certificate.
+the app is run Windows will show "unknown publisher" warning as the app doesn't have a code signing certificate. You will need to select more info and run anyway to use application.
 
 
 ## Commands
