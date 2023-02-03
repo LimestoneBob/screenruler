@@ -1,7 +1,7 @@
 # screenruler
 Cross platform screen ruler using tkinter. 
 
-![Picture of program running](https://user-images.githubusercontent.com/10916106/40881669-a8bb872e-669a-11e8-829c-8136257966f3.png)
+![Picture of program running](https://github.com/LimestoneBob/screenruler/blob/master/ruler.png)
 
 
 ## Features
@@ -30,5 +30,8 @@ the app is run Windows will show "unknown publisher" warning as the app doesn't 
 ## How to use
 - **Scale factor**: 
 Select scale from the menu and input the scale factor. Place the ruler between item to be measured and double click the end of length being measured to see calculation. 
+
+    Calculate the scale factor: Using the ruler, measure a known distance of length on screen in pixels. Calculate the factor by dividing the known measurement value by the pixel number and input the result in the scale factor field. After the scale factor has been entered, double clicking on ruler at any point will give the length in desired unit of measure. 
+
 
 
